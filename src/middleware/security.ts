@@ -14,7 +14,7 @@ const securityMiddleware = async ( req: Request, res: Response, next: NextFuncti
         switch (role) {
             case 'admin':
                 limit = 20;
-                message = 'Admin requests limit exceeded (20 per minute).Slow down.';
+                message = 'Admin requests limit exceeded (20 per minute). Slow down.';
                 break;
             case 'teacher':
             case 'student':
@@ -39,7 +39,7 @@ const securityMiddleware = async ( req: Request, res: Response, next: NextFuncti
             headers: req.headers,
             method: req.method,
             url: req.originalUrl ?? req.url,
-            socket: { remoteAddress: req.socket.remoteAddress ?? req.ip ?? "0.0.0.0" }
+            socket: { remoteAddress: req.ip ?? req.socket.remoteAddress ?? "0.0.0.0" }
         }
 
         const decision = await client.protect(arcjetRequest);
@@ -54,6 +54,10 @@ const securityMiddleware = async ( req: Request, res: Response, next: NextFuncti
 
         if(decision.isDenied() && decision.reason.isRateLimit()){
             return res.status(429).json({error: 'Too many requests.', message});
+        }
+
+        if(decision.isDenied()){
+            return res.status(403).json({error: 'Forbidden', message: 'Request blocked by security policy.'});
         }
 
         next()
