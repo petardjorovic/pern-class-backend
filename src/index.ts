@@ -16,7 +16,7 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/api/subjects', subjectsRouter)
+app.use('/api/subjects', subjectsRouter);
 
 app.get('/', (req, res) => {
   res.send('Hello from Express server!');
