@@ -1,5 +1,6 @@
 import { pgTable, text, timestamp, boolean, pgEnum, index } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import {classes, enrollments} from "./app";
 
 export const roleEnum = pgEnum("role", ["student", "teacher", "admin"]);
 
@@ -60,6 +61,13 @@ export const verification = pgTable("verification", {
 }, (table) => [
     index("verification_identifier_idx").on(table.identifier),
 ]);
+
+export const userRelations = relations(user, ({ many }) => ({
+    sessions: many(session),
+    accounts: many(account),
+    classes: many(classes),
+    enrollments: many(enrollments),
+}));
 
 export const sessionRelations = relations(session, ({ one }) => ({
     user: one(user, {

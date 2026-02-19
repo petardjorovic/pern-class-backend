@@ -11,14 +11,7 @@ import {
     primaryKey
 } from "drizzle-orm/pg-core";
 import {relations} from "drizzle-orm";
-import {user, account, session} from "./auth";
-
-export const userRelations = relations(user, ({ many }) => ({
-    sessions: many(session),
-    accounts: many(account),
-    classes: many(classes),
-    enrollments: many(enrollments),
-}));
+import {user} from "./auth";
 
 export const classStatusEnum = pgEnum('class_status', ['active', 'inactive', 'archived']);
 
