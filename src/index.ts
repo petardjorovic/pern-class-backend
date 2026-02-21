@@ -7,8 +7,8 @@ import {toNodeHandler} from "better-auth/node";
 import subjectsRouter from "./routes/subjects-route.js";
 import securityMiddleware from "./middleware/security.js";
 import {auth} from "./lib/auth.js";
-import usersRouter from "./routes/users-route";
-import classesRouter from "./routes/classes-route";
+import usersRouter from "./routes/users-route.js";
+import classesRouter from "./routes/classes-route.js";
 
 const app = express();
 const port = 8000;
