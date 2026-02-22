@@ -82,6 +82,29 @@ classesRouter.get('/', async (req:Request, res:Response) => {
     }
 })
 
+classesRouter.get('/:id', async (req:Request, res:Response) => {
+    const classId = Number(req.params.id);
+
+    if(!Number.isFinite(classId)) return res.status(400).json({error: 'No Class found.'});
+
+    const [classDetails] = await db
+        .select({
+            ...getTableColumns(classes),
+            subject: {...getTableColumns(subjects)},
+            department: {...getTableColumns(departments)},
+            teacher: {...getTableColumns(user)},
+        })
+        .from(classes)
+        .leftJoin(subjects, eq(classes.subjectId, subjects.id))
+        .leftJoin(user, eq(classes.teacherId, user.id))
+        .leftJoin(departments, eq(subjects.departmentId, departments.id))
+        .where(eq(classes.id, classId))
+
+    if(!classDetails) return res.status(404).json({error: 'Class not found'});
+
+    return res.status(200).json({data: classDetails});
+})
+
 classesRouter.post('/', async (req:Request, res:Response) => {
     try {
         const { name, subjectId, teacherId, capacity, status, description, bannerUrl, bannerCldPubId } = req.body;
