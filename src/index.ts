@@ -17,7 +17,8 @@ if(!process.env.FRONTEND_URL)
   throw new Error("FRONTEND_URL is not set in .env file.")
 
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  // origin: process.env.FRONTEND_URL,
+  origin: "*",
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }))
@@ -25,7 +26,7 @@ app.use(cors({
 app.all('/api/auth/*splat', toNodeHandler(auth));
 
 app.use(express.json());
-app.use(securityMiddleware);
+// app.use(securityMiddleware);
 
 app.use('/api/subjects', subjectsRouter);
 app.use('/api/users', usersRouter)
